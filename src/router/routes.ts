@@ -37,6 +37,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
+    beforeEnter: (to, from, next) => {
+      const authStore = useAuthStore();
+      if (!authStore.connectedUser && to.name !== 'login') {
+        return next({ name: 'login' });
+      }
+      return next();
+    },
   },
 ];
 
