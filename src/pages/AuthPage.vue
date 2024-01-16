@@ -94,19 +94,15 @@
 </template>
 <script setup lang="ts">
 import { ionEyeSharp, ionEyeOffSharp } from '@quasar/extras/ionicons-v5';
-import { SessionStorage } from 'quasar';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from "src/stores/auth"
+import { useQuasar } from 'quasar';
 
-enum PASSWORD_STRENGTH {
-  TOO_SHORT = 'Too Short',
-  WEAK = 'Weak',
-  MEDIUM = 'Medium',
-  STRONG = 'Strong',
-  VERY_STRONG = 'Very Strong',
-}
+import { PASSWORD_STRENGTH, evaluatePasswordScore } from "src/services/auth"
 
 const $router = useRouter();
+const { notify } = useQuasar()
 
 const username = ref('');
 const password = ref('');
@@ -118,32 +114,10 @@ const isSubmitBtnDisabled = computed(() => {
 });
 
 const passwordScore = computed(() => {
-  const upper = /[A-Z]/,
-    lower = /[a-z]/,
-    number = /[0-9]/,
-    special = /[^A-Za-z0-9]/,
-    minLength = 8;
-  let score = 0;
-
-  if (password.value.length < minLength) {
-    return 0;
-  }
-
-  if (upper.test(password.value)) score++;
-  if (lower.test(password.value)) score++;
-  if (number.test(password.value)) score++;
-  if (special.test(password.value)) score++;
-
-  if (score < 3) score--;
-
-  if (password.value.length > minLength) {
-    score += Math.floor((password.value.length - minLength) / 2);
-  }
-
-  return score;
+  return evaluatePasswordScore(password.value)
 });
 
-const passwordStrength = computed(() => {
+const passwordStrengthLabel = computed(() => {
   if (passwordScore.value === 0) return PASSWORD_STRENGTH.TOO_SHORT;
   else if (passwordScore.value < 3) return PASSWORD_STRENGTH.WEAK;
   else if (passwordScore.value < 4) return PASSWORD_STRENGTH.MEDIUM;
@@ -159,23 +133,31 @@ const passwordHint = computed(() => {
     };
   }
   let color = '';
-  if (passwordStrength.value === PASSWORD_STRENGTH.TOO_SHORT)
+  if (passwordStrengthLabel.value === PASSWORD_STRENGTH.TOO_SHORT)
     color = 'text-negative';
   else if (
-    passwordStrength.value === PASSWORD_STRENGTH.WEAK ||
-    passwordStrength.value === PASSWORD_STRENGTH.MEDIUM
+    passwordStrengthLabel.value === PASSWORD_STRENGTH.WEAK ||
+    passwordStrengthLabel.value === PASSWORD_STRENGTH.MEDIUM
   )
     color = 'text-warning';
   else color = 'text-positive';
   return {
-    label: `Password strength: ${passwordStrength.value}`,
+    label: `Password strength: ${passwordStrengthLabel.value}`,
     color,
   };
 });
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (isSubmitBtnDisabled.value) return;
-  SessionStorage.set('loggedUser', username.value);
-  $router.push({ name: 'synchronization' });
+  const { authenticate } = useAuthStore()
+  try {
+    await authenticate({ username: username.value, password: password.value})
+    $router.push({ name: 'synchronization' });
+  } catch {
+    notify({
+      message: 'Authentication failed, please try again',
+      type: 'negative'
+    })
+  }
 };
 </script>
