@@ -2,40 +2,32 @@ import 'pinia';
 import { defineStore } from 'pinia';
 import { useOnline } from '@vueuse/core';
 import { computed, ref } from 'vue';
-export const useSyncState = defineStore('sync', () => {
+export const useSyncStore = defineStore('sync', () => {
   const isOnline = computed(() => {
     return useOnline();
   });
-  const itemsProgression = ref(0);
+  const progress = ref(0);
 
-  const getItemsLoadingProgression = computed(() => {
-    return itemsProgression.value;
+  const getProgress = computed(() => {
+    return progress.value;
   });
-  const getItemsLoadingProgressionValue = computed(() => {
-    return itemsProgression.value / 100;
+  const getProgressPercentage = computed(() => {
+    return progress.value / 100;
   });
 
-  const setLoadingProgression = (value: number) => {
-    itemsProgression.value = value;
+  const setProgress = (payload: number) => {
+    progress.value = payload;
   };
 
-  const simulateProgression = () => {
-    const fakeArray = [10, 25, 50, 75, 100];
-    let index = 0;
-    const intervalId = setInterval(() => {
-      if (index < fakeArray.length) {
-        itemsProgression.value = fakeArray[index++];
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 1000);
+  const reset = () => {
+    progress.value = 0;
   };
 
   return {
     isOnline,
-    getItemsLoadingProgression,
-    getItemsLoadingProgressionValue,
-    setLoadingProgression,
-    simulateProgression,
+    getProgress,
+    getProgressPercentage,
+    setProgress,
+    reset,
   };
 });

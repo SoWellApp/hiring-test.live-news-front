@@ -3,7 +3,7 @@
     <div>
       <div class="col-8 col-sm-6 col-xs-11 q-mt-lg q-mb-lg">
         <div class="row items-center justify-between">
-          <sw-toolbar cyname="header" :username="currentUser">
+          <sw-toolbar cyname="header" :username="connectedUser">
             <template #online>
               <online-check class="q-ml-sm"></online-check>
             </template>
@@ -16,14 +16,14 @@
           class="q-mb-lg"
           size="24px"
           rounded
-          :value="itemsLoadingProgressionValue"
+          :value="progressPercentage  "
           color="primary"
         >
           <div class="absolute-full flex flex-center">
             <q-badge
               color="white"
               text-color="primary"
-              :label="`${itemsLoadingProgression}%`"
+              :label="`${progress}%`"
             />
           </div>
         </q-linear-progress>
@@ -47,35 +47,35 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
 import SwToolbar from 'src/components/SWToolbar.vue';
-import { useSyncState } from 'src/stores/sync';
-import { SessionStorage } from 'quasar';
+import { useSyncStore } from 'src/stores/sync';
 import { useRouter } from 'vue-router';
 import OnlineCheck from 'src/components/OnlineCheck.vue';
+import { useAuthStore } from 'src/stores/auth';
+import *  as SyncService from "src/services/sync"
 
-const syncState = useSyncState();
+const syncStore = useSyncStore();
+const authStore = useAuthStore()
 const $router = useRouter();
 
-const currentUser = computed(
-  () => SessionStorage.getItem('loggedUser') as string
+const connectedUser = computed(
+  () => authStore.connectedUser
 );
-const itemsLoadingProgression = computed(
-  () => syncState.getItemsLoadingProgression
-);
-const itemsLoadingProgressionValue = computed(
-  () => syncState.getItemsLoadingProgressionValue
-);
+const progress = computed(() => syncStore.getProgress);
+const progressPercentage = computed(() => syncStore.getProgressPercentage);
 
 const cancelSync = () => {
   // TODO: implement
 };
 
-watch(itemsLoadingProgression, async () => {
-  if (itemsLoadingProgression.value == 100) {
-    await $router.push('/');
-    syncState.setLoadingProgression(0);
+watch(progress, async (value) => {
+  if (value === 100) {
+    await $router.push({ name: 'index' });
+    syncStore.reset();
   }
 });
 onMounted(() => {
-  syncState.simulateProgression();
+  SyncService.initialSync((milestone: number) => {
+    syncStore.setProgress(milestone);
+  })
 });
 </script>

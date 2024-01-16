@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { useSyncState } from 'src/stores/sync';
-const { isOnline } = useSyncState();
+import { useSyncStore } from 'src/stores/sync';
+const { isOnline } = useSyncStore();
 </script>
 
 <style>

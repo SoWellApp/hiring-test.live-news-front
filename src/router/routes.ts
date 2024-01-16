@@ -1,5 +1,5 @@
-import { SessionStorage } from 'quasar';
 import { RouteRecordRaw } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -14,7 +14,8 @@ const routes: RouteRecordRaw[] = [
       },
     ],
     beforeEnter: (to, from, next) => {
-      if (!SessionStorage.has('loggedUser') && to.name !== 'login') {
+      const authStore = useAuthStore();
+      if (!authStore.connectedUser && to.name !== 'login') {
         return next({ name: 'login' });
       }
       return next();
