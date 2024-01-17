@@ -22,6 +22,7 @@
                       Username
                     </div>
                     <q-input
+                      data-testid="input-username"
                       v-model.trim="username"
                       dense
                       outlined
@@ -39,6 +40,7 @@
                       Password
                     </div>
                     <q-input
+                      data-testid="input-password"
                       v-model="password"
                       :type="showPassword ? 'text' : 'password'"
                       dense
@@ -62,6 +64,7 @@
                   </div>
                   <div class="row q-mt-md">
                     <q-btn
+                      data-testid="btn-submit"
                       label="Log in"
                       color="primary"
                       no-caps

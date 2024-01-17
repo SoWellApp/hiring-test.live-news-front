@@ -13,13 +13,8 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(['click', 'openSetting']);
 
 const formattedName = computed(() => {
   return props.username;
 });
-
-const emitOpenSetting = () => {
-  emit('openSetting');
-};
 </script>

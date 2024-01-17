@@ -66,6 +66,9 @@ module.exports = configure(function (/* ctx */) {
       // analyze: true,
       env: {
         E2E_TEST: process.env.E2E_TEST,
+        BROWSER: process.env.BROWSER,
+        API_URL: 'http://localhost:1337/api',
+        CI: process.env.CI,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -84,7 +87,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      open: true, // opens browser window automatically
+      open: process.env.E2E_TEST ? false : true, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
