@@ -22,6 +22,7 @@
                       Username
                     </div>
                     <q-input
+                      data-testid="input-username"
                       v-model.trim="username"
                       dense
                       outlined
@@ -39,6 +40,7 @@
                       Password
                     </div>
                     <q-input
+                      data-testid="input-password"
                       v-model="password"
                       :type="showPassword ? 'text' : 'password'"
                       dense
@@ -62,6 +64,7 @@
                   </div>
                   <div class="row q-mt-md">
                     <q-btn
+                      data-testid="btn-submit"
                       label="Log in"
                       color="primary"
                       no-caps
@@ -98,11 +101,15 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
-import { PASSWORD_STRENGTH, evaluatePasswordScore, authenticate } from "src/services/auth"
-import { useAuthStore } from "src/stores/auth"
+import {
+  PASSWORD_STRENGTH,
+  evaluatePasswordScore,
+  authenticate,
+} from 'src/services/auth';
+import { useAuthStore } from 'src/stores/auth';
 
 const $router = useRouter();
-const { notify } = useQuasar()
+const { notify } = useQuasar();
 
 const username = ref('');
 const password = ref('');
@@ -114,7 +121,7 @@ const isSubmitBtnDisabled = computed(() => {
 });
 
 const passwordScore = computed(() => {
-  return evaluatePasswordScore(password.value)
+  return evaluatePasswordScore(password.value);
 });
 
 const passwordStrengthLabel = computed(() => {
@@ -149,16 +156,19 @@ const passwordHint = computed(() => {
 
 const handleSubmit = async () => {
   if (isSubmitBtnDisabled.value) return;
-  const { setConnectedUser } = useAuthStore()
+  const { setConnectedUser } = useAuthStore();
   try {
-    const response = await authenticate({ username: username.value, password: password.value})
-    setConnectedUser(response)
+    const response = await authenticate({
+      username: username.value,
+      password: password.value,
+    });
+    setConnectedUser(response);
     $router.push({ name: 'synchronization' });
   } catch {
     notify({
       message: 'Authentication failed, please try again',
-      type: 'negative'
-    })
+      type: 'negative',
+    });
   }
 };
 </script>

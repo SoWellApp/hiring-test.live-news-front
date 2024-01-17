@@ -2,6 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 
 const testDir = defineBddConfig({
+  importTestFrom: './test/fixtures.ts',
   paths: ['./test/integration/**/*.feature'],
   require: ['test/integration/**/steps/*.ts'],
   quotes: 'backtick',
@@ -20,9 +21,12 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
   ],
+  webServer: {
+    command: 'yarn dev:test',
+    url: 'http://127.0.0.1:9000',
+    reuseExistingServer: !process.env.CI,
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
 });

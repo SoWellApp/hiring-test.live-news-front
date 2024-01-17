@@ -64,7 +64,10 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        E2E_TEST: process.env.E2E_TEST,
+        API_URL: 'http://localhost:1337/api',
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,

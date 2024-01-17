@@ -1,16 +1,47 @@
 import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
 
-const { Given, When, Then } = createBdd();
+import { test } from '../../../fixtures';
 
-Given('I open url {string}', async ({ page }, url) => {
-  await page.goto(url);
+const { Given, When, Then } = createBdd(test);
+
+Given(
+  'User navigates to the application',
+  async ({ pageObjects: { authPage } }) => {
+    await authPage.goToAuthPage();
+  }
+);
+
+When(
+  'I enter the username as {string}',
+  async ({ pageObjects: { authPage } }, username: string) => {
+    await authPage.getInput('username').fill(username);
+  }
+);
+
+When(
+  'I enter the password as {string}',
+  async ({ pageObjects: { authPage } }, password: string) => {
+    await authPage.getInput('password').fill(password);
+  }
+);
+
+When('I click on login button', async ({ pageObjects: { authPage } }) => {
+  await authPage.getBtn('submit').click();
 });
 
-When('I click link {string}', async ({ page }, name) => {
-  await page.getByRole('link', { name }).click();
-});
+Then(
+  'The login button is {string}',
+  async ({ pageObjects: { authPage } }, btnState: string) => {
+    const btn = authPage.getBtn('submit');
+    if (btnState === 'enabled') {
+      await expect(btn!).toHaveClass(/q-btn--actionable/);
+    } else {
+      await expect(btn!).toHaveClass(/disabled/);
+    }
+  }
+);
 
-Then('I see in title {string}', async ({ page }, keyword) => {
-  await expect(page).toHaveTitle(new RegExp(keyword));
+Then('User should logged in successfully', async ({ page }) => {
+  await expect(page).toHaveURL(/init-synchronization/);
 });
