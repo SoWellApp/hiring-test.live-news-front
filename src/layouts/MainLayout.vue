@@ -11,7 +11,7 @@
           flat
           round
           :icon="ionLogOutOutline"
-          @click="logout"
+          @click="handleLogout"
         ></q-btn>
       </q-toolbar>
     </q-header>
@@ -24,21 +24,24 @@
 
 <script setup lang="ts">
 import { ionLogOutOutline } from '@quasar/extras/ionicons-v5';
-import { SessionStorage } from 'quasar';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from 'src/stores/auth';
 import OnlineCheck from 'src/components/OnlineCheck.vue';
+
 const $route = useRoute();
 const $router = useRouter();
+const { connectedUser, logout } = useAuthStore()
+
 const title = computed(() => {
   return $route.meta.title || 'Untitled page';
 });
 const username = computed(() => {
-  return SessionStorage.getItem('loggedUser');
+  return connectedUser
 });
 
-const logout = () => {
-  SessionStorage.remove('loggedUser');
+const handleLogout = () => {
+  logout()
   $router.push({ name: 'login' });
 };
 </script>

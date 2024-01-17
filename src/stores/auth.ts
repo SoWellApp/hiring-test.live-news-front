@@ -7,20 +7,16 @@ export const useAuthStore = defineStore(
   () => {
     const connectedUser = ref('');
 
-    const authenticate = async (payload: {
-      username: string;
-      password: string;
-    }) => {
-      const response = AuthService.authenticate(payload);
-      if (response) {
-        connectedUser.value = payload.username;
-        return Promise.resolve();
-      }
-      return Promise.reject();
+    const setConnectedUser = (payload: string) => {
+      connectedUser.value = payload;
+    };
+    const logout = () => {
+      connectedUser.value = '';
     };
     return {
       connectedUser,
-      authenticate,
+      setConnectedUser,
+      logout,
     };
   },
   {

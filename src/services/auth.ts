@@ -32,10 +32,12 @@ export const evaluatePasswordScore = (password: string) => {
   return score;
 };
 
-export const authenticate = (payload: {
+export const authenticate = async (payload: {
   username: string;
   password: string;
 }) => {
   const score = evaluatePasswordScore(payload.password);
-  return payload.username !== '' && score >= 3;
+  const isSuccessful = payload.username !== '' && score >= 3;
+  if (isSuccessful) return Promise.resolve(payload.username);
+  return Promise.reject();
 };

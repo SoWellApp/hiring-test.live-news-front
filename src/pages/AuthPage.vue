@@ -96,10 +96,10 @@
 import { ionEyeSharp, ionEyeOffSharp } from '@quasar/extras/ionicons-v5';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from "src/stores/auth"
 import { useQuasar } from 'quasar';
 
-import { PASSWORD_STRENGTH, evaluatePasswordScore } from "src/services/auth"
+import { PASSWORD_STRENGTH, evaluatePasswordScore, authenticate } from "src/services/auth"
+import { useAuthStore } from "src/stores/auth"
 
 const $router = useRouter();
 const { notify } = useQuasar()
@@ -149,9 +149,10 @@ const passwordHint = computed(() => {
 
 const handleSubmit = async () => {
   if (isSubmitBtnDisabled.value) return;
-  const { authenticate } = useAuthStore()
+  const { setConnectedUser } = useAuthStore()
   try {
-    await authenticate({ username: username.value, password: password.value})
+    const response = await authenticate({ username: username.value, password: password.value})
+    setConnectedUser(response)
     $router.push({ name: 'synchronization' });
   } catch {
     notify({
