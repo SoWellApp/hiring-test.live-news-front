@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "echo \"No test specified\" && exit 0",
+    "test": "cross-env E2E_TEST=true playwright test",
+    "test:browser": "cross-env E2E_TEST=true playwright test --ui",
     "dev": "quasar dev",
     "build": "quasar build"
   },
@@ -26,6 +27,7 @@
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.41.0",
     "@quasar/app-vite": "^1.3.0",
     "@types/bluebird": "^3.5.42",
     "@types/lodash": "^4.14.202",
@@ -33,6 +35,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
     "autoprefixer": "^10.4.2",
+    "cross-env": "^7.0.3",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
