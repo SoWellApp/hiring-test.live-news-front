@@ -36,5 +36,5 @@ yarn-error.log*
 # local .env files
 .env.local*
 /.features-gen
-/playwright-report
+/test/playwright-report
 /test-results

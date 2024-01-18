@@ -11,7 +11,7 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
-  reporter: 'html',
+  reporter: [['html', { outputFolder: 'test/playwright-report' }]],
   use: {
     screenshot: 'only-on-failure',
     baseURL: 'http://localhost:9000',

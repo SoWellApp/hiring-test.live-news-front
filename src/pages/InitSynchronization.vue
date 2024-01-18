@@ -16,7 +16,7 @@
           class="q-mb-lg"
           size="24px"
           rounded
-          :value="progressPercentage  "
+          :value="progressPercentage"
           color="primary"
         >
           <div class="absolute-full flex flex-center">
@@ -51,15 +51,13 @@ import { useSyncStore } from 'src/stores/sync';
 import { useRouter } from 'vue-router';
 import OnlineCheck from 'src/components/OnlineCheck.vue';
 import { useAuthStore } from 'src/stores/auth';
-import *  as SyncService from "src/services/sync"
+import * as SyncService from 'src/services/sync';
 
 const syncStore = useSyncStore();
-const authStore = useAuthStore()
+const authStore = useAuthStore();
 const $router = useRouter();
 
-const connectedUser = computed(
-  () => authStore.connectedUser
-);
+const connectedUser = computed(() => authStore.connectedUser);
 const progress = computed(() => syncStore.getProgress);
 const progressPercentage = computed(() => syncStore.getProgressPercentage);
 
@@ -76,6 +74,6 @@ watch(progress, async (value) => {
 onMounted(() => {
   SyncService.initialSync((milestone: number) => {
     syncStore.setProgress(milestone);
-  })
+  });
 });
 </script>

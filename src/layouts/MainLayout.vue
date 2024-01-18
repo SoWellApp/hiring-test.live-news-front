@@ -2,9 +2,9 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title>{{ title }}</q-toolbar-title>
+        <q-toolbar-title data-testid="header-title">{{ title }}</q-toolbar-title>
 
-        <div>Welcome, {{ username }}</div>
+        <div>Welcome, <span data-testid="header-username">{{ username }}</span></div>
         <online-check class="q-ml-sm"></online-check>
         <q-btn
           class="q-ml-md"
