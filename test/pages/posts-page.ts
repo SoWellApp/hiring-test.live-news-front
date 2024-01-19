@@ -6,6 +6,10 @@ export class PostsPage extends BasePage {
         title: 'header-title',
         username: 'header-username',
       },
+      posts: {
+        container: 'posts-container',
+        item: (id: number) => `post-item-${id}`
+      }
     };
   }
 
@@ -20,5 +24,16 @@ export class PostsPage extends BasePage {
 
   public getHeaderUsername() {
     return this.page.getByTestId(this.elements.header.username);
+  }
+
+  public getPostsContainer() {
+    return this.page.getByTestId(this.elements.posts.container)
+  }
+
+  public getPostItemById(id: number) {
+    return this.page.getByTestId(this.elements.posts.item(id))
+  }
+  public getPostItems() {
+    return this.getPostsContainer().locator('.post-card')
   }
 }

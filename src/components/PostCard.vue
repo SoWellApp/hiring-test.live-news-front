@@ -1,5 +1,5 @@
 <template>
-  <q-card class="my-card" flat bordered>
+  <q-card :data-testid="dataTestId" class="post-card" flat bordered>
     <q-item>
       <q-item-section avatar>
         <q-avatar>
@@ -28,20 +28,24 @@
 <script setup lang="ts">
 import dayJS from 'dayjs';
 import { Post } from 'src/types';
-import { PropType } from 'vue';
+import { PropType, computed } from 'vue';
 
-defineProps({
+const props = defineProps({
   post: {
     type: Object as PropType<Post>,
     required: true,
   },
 });
 
-const formatDate = (date: string) => {
+const dataTestId = computed(() => {
+  return `post-item-${props.post.id}`
+})
+
+const formatDate = (date: number) => {
   return dayJS(date).format('DD/MM/YYYY HH:mm');
 };
 </script>
 <style scoped lang="sass">
-.my-card
+.post-card
   background-color: white
 </style>

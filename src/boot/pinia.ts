@@ -10,5 +10,4 @@ declare const window: Window &
 export default boot(() => {
   const AuthStore = useAuthStore();
   window.AuthStore = AuthStore;
-  console.log('🚀 ~ boot ~ window.AuthStore:', window.AuthStore);
 });

@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
 import { createBdd } from 'playwright-bdd';
 
-import { test } from '../../../fixtures';
+import { test } from '../../../../context';
 import { Store } from 'pinia';
 
 declare const window: Window &
@@ -9,24 +9,7 @@ declare const window: Window &
     AuthStore: Store & { setConnectedUser: (username: string) => void };
   };
 
-const { Given, When, Then } = createBdd(test);
-
-Given(
-  'I am authenticated as {string}',
-  async ({ pageObjects }, username: string) => {
-    const { postsPage } = pageObjects;
-    await postsPage.goto();
-    await postsPage.page.waitForSelector('h4.title');
-    await postsPage.page.evaluate(
-      (username: string) => window.AuthStore.setConnectedUser(username),
-      username
-    );
-  }
-);
-
-When('I navigate to the posts page', async ({ pageObjects: { postsPage } }) => {
-  await postsPage.goToPostsPage();
-});
+const { Then } = createBdd(test);
 
 Then(
   'I can see {string} in the header title',
