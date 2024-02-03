@@ -11,7 +11,9 @@ export const usePostStore = defineStore('posts', () => {
     isLoading.value = true;
     posts.value = [];
     try {
-      const response = await api.get<Post[]>('/posts/find?sort=updatedAt DESC');
+      const response = await api.get<Post[]>(
+        '/posts/find?limit=10&&sort=updatedAt DESC'
+      );
       if (response.status === 200) {
         posts.value = response.data;
       }

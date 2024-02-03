@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <template v-if="isLoading"> Loading... </template>
+    <post-cart-sekeleton v-if="isLoading"></post-cart-sekeleton>
     <template v-else>
       <q-list class="column">
         <q-item v-for="post in posts" :key="post.id">
@@ -16,6 +16,7 @@ import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePostStore } from 'src/stores/posts';
 import PostCard from 'src/components/PostCard.vue';
+import PostCartSekeleton from 'src/components/PostCartSekeleton.vue';
 
 const postStore = usePostStore();
 const { isLoading, posts } = storeToRefs(postStore);
