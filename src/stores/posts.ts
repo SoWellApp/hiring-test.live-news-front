@@ -29,8 +29,20 @@ export const usePostStore = defineStore('posts', () => {
       await pouchdb.bulkDocs(
         docsToDelete.map((doc) => ({ ...doc, _deleted: true }))
       );
-      console.log('Toutes les données ont été supprimées !');
     });
+  };
+
+  const loadMore = async (index: number, done: () => void) => {
+    done();
+    if (index > 1) {
+      isLoading.value = true;
+      const response = await api.get<Post[]>(
+        '/posts/find?limit=10&sort=updatedAt DESC'
+      );
+      storeToPouch(response.data);
+      isLoading.value = false;
+      done();
+    }
   };
 
   const loadPosts = async () => {
@@ -42,9 +54,13 @@ export const usePostStore = defineStore('posts', () => {
         const response = await api.get<Post[]>(
           '/posts/find?limit=10&sort=updatedAt DESC'
         );
+        console.log('store');
         storeToPouch(response.data);
+        isLoading.value = false;
       } else {
+        console.log('get');
         getPosts();
+        isLoading.value = false;
       }
     } catch (error) {
       console.error('🚀 ~ file: posts.ts:16 ~ loadPosts ~ error:', error);
@@ -59,6 +75,7 @@ export const usePostStore = defineStore('posts', () => {
       .allDocs({
         include_docs: true,
         attachments: true,
+        limit: 10,
       })
       .then(async (result) => {
         posts.value = result.rows.map((row) => row.doc);
@@ -75,5 +92,6 @@ export const usePostStore = defineStore('posts', () => {
     options,
     loadPosts,
     getPosts,
+    loadMore,
   };
 });
