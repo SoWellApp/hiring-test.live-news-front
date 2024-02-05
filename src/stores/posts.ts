@@ -70,20 +70,16 @@ export const usePostStore = defineStore('posts', () => {
     }
   };
 
-  const getPosts = () => {
-    pouchdb
-      .allDocs({
-        include_docs: true,
-        attachments: true,
-        limit: 10,
-      })
-      .then(async (result) => {
-        posts.value = result.rows.map((row) => row.doc);
-        console.log('here', posts.value.length);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const getPosts = async () => {
+    const results = await pouchdb.allDocs({
+      include_docs: true,
+      attachments: true,
+      limit: 10,
+      descending: false,
+      startkey: '_design/created_at',
+      endkey: '_design/created_at\uffff',
+    });
+    posts.value = results.rows.map((row) => row.doc);
   };
 
   return {
