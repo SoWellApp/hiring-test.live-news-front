@@ -3,16 +3,14 @@
     <q-item>
       <q-item-section avatar>
         <q-avatar>
-          <img :src="post.author.avatar" />
+          <q-img :src="post.author.avatar" />
         </q-avatar>
       </q-item-section>
 
       <q-item-section>
         <q-item-label>{{ post.title }}</q-item-label>
-        <q-item-label caption
-          >posted by {{ post.author.pseudo }},
-          {{ formatDate(post.updatedAt) }}</q-item-label
-        >
+        <q-item-label caption>posted by {{ post.author.pseudo }},
+          {{ formatDate(post.updatedAt) }}</q-item-label>
       </q-item-section>
     </q-item>
 
