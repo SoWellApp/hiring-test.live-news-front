@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <template v-if="isLoading"> Loading... </template>
+    <q-spinner-dots v-if="isPostLoading" size="60px" />
     <template v-else>
       <q-list class="column">
         <q-item v-for="post in posts" :key="post.id">
@@ -12,16 +12,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePostStore } from 'src/stores/posts';
 import PostCard from 'src/components/PostCard.vue';
 
 const postStore = usePostStore();
-const { isLoading, posts } = storeToRefs(postStore);
-const { loadPosts } = postStore;
+const { isPostLoading, posts } = storeToRefs(postStore);
 
-onMounted(() => {
-  loadPosts();
-});
 </script>
