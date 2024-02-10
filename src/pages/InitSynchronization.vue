@@ -76,8 +76,8 @@ const { loadUsers } = userStore;
 const postStore = usePostStore();
 const { loadPosts, isPostLoading } = postStore;
 
-onMounted(() => {
-  loadUsers();
+onMounted(async () => {
+  await loadUsers();
   loadPosts();
   syncState.simulateProgression();
 });
