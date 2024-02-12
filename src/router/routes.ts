@@ -10,7 +10,10 @@ const routes: RouteRecordRaw[] = [
         name: 'index',
         path: '',
         component: () => import('pages/IndexPage.vue'),
-        meta: { title: 'Index' },
+        meta: {
+          title: 'Index',
+          prefetch: true
+        },
       },
     ],
     beforeEnter: (to, from, next) => {
