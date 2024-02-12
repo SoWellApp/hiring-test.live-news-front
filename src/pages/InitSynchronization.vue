@@ -39,10 +39,10 @@ import { SessionStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import OnlineCheck from 'src/components/OnlineCheck.vue';
 import { useUserStore } from 'src/stores/users';
-import { storeToRefs } from 'pinia';
 import { usePostStore } from 'src/stores/posts';
 
 const syncState = useSyncState();
+const { isOnline } = syncState;
 const $router = useRouter();
 
 const currentUser = computed(
@@ -59,6 +59,14 @@ const cancelSync = () => {
   // TODO: implement
 };
 
+// Implement the preloading User and avatar
+const userStore = useUserStore();
+const { loadUsers } = userStore;
+
+// Implement the preloading Post
+const postStore = usePostStore();
+const { loadPosts, getPostsFromIndexedDB, isPostLoading } = postStore;
+
 
 watch(itemsLoadingProgression, async () => {
   if (!isPostLoading) {
@@ -67,18 +75,17 @@ watch(itemsLoadingProgression, async () => {
   }
 });
 
-// Implement the preloading User and avatar
-const userStore = useUserStore();
-const { loadUsers } = userStore;
-
-
-// Implement the preloading Post
-const postStore = usePostStore();
-const { loadPosts, isPostLoading } = postStore;
 
 onMounted(async () => {
-  await loadUsers();
-  loadPosts();
+
+  if (!isOnline.value) {
+    await getPostsFromIndexedDB();
+  } else {
+    await loadUsers();
+    await loadPosts();
+    await getPostsFromIndexedDB();
+  }
+
   syncState.simulateProgression();
 });
 

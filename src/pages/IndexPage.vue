@@ -3,7 +3,7 @@
     <q-spinner-dots v-if="isPostLoading" size="60px" />
     <template v-else>
       <q-list class="column">
-        <q-item v-for="post in posts" :key="post.id">
+        <q-item v-for="post in postsFromIndexDB" :key="post.id">
           <post-card :post="post"></post-card>
         </q-item>
       </q-list>
@@ -17,6 +17,6 @@ import { usePostStore } from 'src/stores/posts';
 import PostCard from 'src/components/PostCard.vue';
 
 const postStore = usePostStore();
-const { isPostLoading, posts } = storeToRefs(postStore);
+const { isPostLoading, postsFromIndexDB } = storeToRefs(postStore);
 
 </script>
