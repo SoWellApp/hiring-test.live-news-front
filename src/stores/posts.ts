@@ -43,21 +43,21 @@ export const usePostStore = defineStore('posts', () => {
 
     const request = window.indexedDB.open(dbName, dbVersion);
 
-    request.onerror = (event: Event) => {
+    request.onerror = (event) => {
       console.error('Erreur lors de l\'ouverture de la base de données', (event.target as IDBRequest)?.error);
+
     };
 
-    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+    request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result as IDBDatabase;
 
       if (!db.objectStoreNames.contains(storeName)) {
-        const objectStore = db.createObjectStore(storeName, { keyPath: 'id' });
-
-        objectStore.createIndex('title', 'title', { unique: false });
+        const objectStore = db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true });
+        objectStore.createIndex('id', 'id', { unique: false });
       }
     };
 
-    request.onsuccess = (event: Event) => {
+    request.onsuccess = (event) => {
       const db = (event.target as IDBOpenDBRequest).result as IDBDatabase;
 
       const transaction = db.transaction(storeName, 'readwrite');
@@ -75,24 +75,25 @@ export const usePostStore = defineStore('posts', () => {
         const data = dataArray[index];
         const addRequest = objectStore.add(data);
 
-        addRequest.onsuccess = (event: Event) => {
+        addRequest.onsuccess = (event) => {
           console.log(`Donnée ${index + 1} ajoutée avec succès à IndexedDB`);
           addDataRecursive(index + 1);
         };
 
-        addRequest.onerror = (event: Event) => {
+        addRequest.onerror = (event) => {
           console.error(`Erreur lors de l'ajout de la donnée ${index + 1} à IndexedDB`, (event.target as IDBRequest)?.error);
+          addDataRecursive(index + 1);
         };
       };
 
       addDataRecursive(0);
     };
 
-    request.onerror = (event: Event) => {
+    request.onerror = (event) => {
       console.error('Erreur lors de l\'ouverture de la base de données', (event.target as IDBRequest)?.error);
     };
 
-    request.onblocked = (event: Event) => {
+    request.onblocked = (event) => {
       console.log('L\'ouverture de la base de données est bloquée par une autre connexion ouverte');
     };
   };

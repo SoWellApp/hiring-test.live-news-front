@@ -18,6 +18,7 @@
     "@vueuse/core": "^10.7.0",
     "axios": "^1.2.1",
     "dayjs": "^1.11.10",
+    "indexeddb-js": "^0.0.14",
     "lodash": "^4.17.21",
     "pinia": "^2.0.11",
     "pouchdb": "^8.0.1",

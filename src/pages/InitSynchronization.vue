@@ -78,6 +78,8 @@ watch(itemsLoadingProgression, async () => {
 
 onMounted(async () => {
 
+  //console.log("isOnline", isOnline.value)
+
   if (!isOnline.value) {
     await getPostsFromIndexedDB();
   } else {
@@ -85,6 +87,8 @@ onMounted(async () => {
     await loadPosts();
     await getPostsFromIndexedDB();
   }
+
+
 
   syncState.simulateProgression();
 });
