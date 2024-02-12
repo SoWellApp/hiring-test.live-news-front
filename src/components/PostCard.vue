@@ -9,10 +9,8 @@
 
       <q-item-section>
         <q-item-label>{{ post.title }}</q-item-label>
-        <q-item-label caption
-          >posted by {{ post.author.pseudo }},
-          {{ formatDate(post.updatedAt) }}</q-item-label
-        >
+        <q-item-label caption>posted by {{ post.author.pseudo }},
+          {{ formatDate(post.updatedAt) }}</q-item-label>
       </q-item-section>
     </q-item>
 

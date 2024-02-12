@@ -16,42 +16,23 @@
 
                 <q-form @submit="handleSubmit">
                   <div>
-                    <div
-                      class="q-ml-xs q-mb-xs text-subtitle2 text-weight-bold"
-                    >
+                    <div class="q-ml-xs q-mb-xs text-subtitle2 text-weight-bold">
                       Username
                     </div>
-                    <q-input
-                      v-model.trim="username"
-                      dense
-                      outlined
-                      :rules="[
-                        (val) => !!val || 'Username is required',
-                        (val) =>
-                          val.length > 3 ||
-                          'Username must at least have 4 characters',
-                      ]"
-                      input-class="text-subtitle2 text-weight-medium"
-                    />
-                    <div
-                      class="q-ml-xs q-mb-xs text-subtitle2 text-weight-bold"
-                    >
+                    <q-input v-model.trim="username" dense outlined :rules="[
+                      (val) => !!val || 'Username is required',
+                      (val) =>
+                        val.length > 3 ||
+                        'Username must at least have 4 characters',
+                    ]" input-class="text-subtitle2 text-weight-medium" />
+                    <div class="q-ml-xs q-mb-xs text-subtitle2 text-weight-bold">
                       Password
                     </div>
-                    <q-input
-                      v-model="password"
-                      :type="showPassword ? 'text' : 'password'"
-                      dense
-                      outlined
-                      input-class="text-subtitle2 text-weight-bold"
-                      bottom-slots
-                    >
+                    <q-input v-model="password" :type="showPassword ? 'text' : 'password'" dense outlined
+                      input-class="text-subtitle2 text-weight-bold" bottom-slots>
                       <template #append>
-                        <q-icon
-                          :name="showPassword ? ionEyeOffSharp : ionEyeSharp"
-                          class="cursor-pointer q-mr-sm lightenDark"
-                          @click="showPassword = !showPassword"
-                        />
+                        <q-icon :name="showPassword ? ionEyeOffSharp : ionEyeSharp"
+                          class="cursor-pointer q-mr-sm lightenDark" @click="showPassword = !showPassword" />
                       </template>
                       <template #hint>
                         <div :class="passwordHint.color">
@@ -61,31 +42,16 @@
                     </q-input>
                   </div>
                   <div class="row q-mt-md">
-                    <q-btn
-                      label="Log in"
-                      color="primary"
-                      no-caps
-                      unelevated
-                      data-cy="submit-login"
-                      text-color="white"
-                      :loading="isLoading"
-                      type="submit"
-                      :disable="isSubmitBtnDisabled || isLoading"
-                      class="submitBtn text-subtitle2 text-weight-bold"
-                    />
+                    <q-btn label="Log in" color="primary" no-caps unelevated data-cy="submit-login" text-color="white"
+                      :loading="isLoading" type="submit" :disable="isSubmitBtnDisabled || isLoading"
+                      class="submitBtn text-subtitle2 text-weight-bold" />
                   </div>
                 </q-form>
               </div>
             </div>
           </div>
-          <div
-            class="column col justify-center content-center gt-sm"
-            :style="'background: #eef8fd'"
-          >
-            <q-img
-              src="src/assets/illustration-login.svg"
-              class="q-pl-md q-pr-md logoWhite"
-            />
+          <div class="column col justify-center content-center gt-sm" :style="'background: #eef8fd'">
+            <q-img src="src/assets/illustration-login.svg" class="q-pl-md q-pr-md logoWhite" />
           </div>
         </div>
       </q-page>

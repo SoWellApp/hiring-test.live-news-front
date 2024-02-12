@@ -11,20 +11,12 @@
         </div>
       </div>
       <div class="column justify-center">
-        <div class="h5 q-mb-lg row items-center justify-center">Loading...</div>
-        <q-linear-progress
-          class="q-mb-lg"
-          size="24px"
-          rounded
-          :value="itemsLoadingProgressionValue"
-          color="primary"
-        >
+        <div class="flex items-center justify-center">
+          <q-spinner-dots size="50px" />
+        </div>
+        <q-linear-progress class="q-mb-lg" size="24px" rounded :value="itemsLoadingProgressionValue" color="primary">
           <div class="absolute-full flex flex-center">
-            <q-badge
-              color="white"
-              text-color="primary"
-              :label="`${itemsLoadingProgression}%`"
-            />
+            <q-badge color="white" text-color="primary" :label="`${itemsLoadingProgression}%`" />
           </div>
         </q-linear-progress>
         <div class="h5 row no-wrap items-center justify-center">
@@ -33,12 +25,7 @@
           </div>
         </div>
         <div class="row q-mt-md justify-center">
-          <q-btn
-            :label="'Cancel'"
-            icon="cancel"
-            color="primary"
-            @click="cancelSync"
-          ></q-btn>
+          <q-btn :label="'Cancel'" icon="cancel" color="primary" @click="cancelSync"></q-btn>
         </div>
       </div>
     </div>
@@ -51,8 +38,11 @@ import { useSyncState } from 'src/stores/sync';
 import { SessionStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import OnlineCheck from 'src/components/OnlineCheck.vue';
+import { useUserStore } from 'src/stores/users';
+import { usePostStore } from 'src/stores/posts';
 
 const syncState = useSyncState();
+const { isOnline } = syncState;
 const $router = useRouter();
 
 const currentUser = computed(
@@ -69,13 +59,38 @@ const cancelSync = () => {
   // TODO: implement
 };
 
+// Implement the preloading User and avatar
+const userStore = useUserStore();
+const { loadUsers } = userStore;
+
+// Implement the preloading Post
+const postStore = usePostStore();
+const { loadPosts, getPostsFromIndexedDB, isPostLoading } = postStore;
+
+
 watch(itemsLoadingProgression, async () => {
-  if (itemsLoadingProgression.value == 100) {
+  if (!isPostLoading) {
     await $router.push('/');
     syncState.setLoadingProgression(0);
   }
 });
-onMounted(() => {
+
+
+onMounted(async () => {
+
+  //console.log("isOnline", isOnline.value)
+
+  if (!isOnline.value) {
+    await getPostsFromIndexedDB();
+  } else {
+    await loadUsers();
+    await loadPosts();
+    await getPostsFromIndexedDB();
+  }
+
+
+
   syncState.simulateProgression();
 });
+
 </script>
